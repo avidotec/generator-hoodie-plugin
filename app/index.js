@@ -1,15 +1,17 @@
 'use strict';
-var yeoman = require('yeoman-generator');
-var chalk = require('chalk');
-var yosay = require('yosay');
-var path = require('path');
-var url = require('url');
-var npmName = require('npm-name');
-var superb = require('superb');
-var _ = require('lodash');
-var _s = require('underscore.string');
-var which = require('which');
-var spawn = require('child_process').spawn;
+var yeoman = require('yeoman-generator'),
+  chalk = require('chalk'),
+  yosay = require('yosay'),
+  path = require('path'),
+  url = require('url'),
+  npmName = require('npm-name'),
+  superb = require('superb'),
+  _ = require('lodash'),
+  _s = require('underscore.string'),
+  which = require('which'),
+  spawn = require('child_process').spawn,
+  fs = require('fs'),
+  async = require('async');
 
 
 var extractGeneratorName = function (appname) {
@@ -50,7 +52,7 @@ module.exports = yeoman.generators.Base.extend({
         default: true,
         when: function (answers) {
           var done = this.async();
-          var name = answers.generatorName;
+          var name = 'hoodie-plugin-' + answers.generatorName;
           npmName(name, function (err, available) {
             if (!available) {
               done(true);
@@ -85,18 +87,32 @@ module.exports = yeoman.generators.Base.extend({
   },
 
   writing: {
+    projectfiles: function () {
+      this.template('hoodie.generatorName.js', 'hoodie.'+ this.generatorName + '.js');
+      this.template('lib/generatorName.js', 'lib/'+ this.generatorName + '.js');
+    },
     processtemplatedirectoryandcopy: function () {
-      this.directory('');
+      var exclude = ['hoodie.generatorName.js', 'lib/generatorName.js'];
+      var source = '';
+      var destination;
+      var root = this.isPathAbsolute(source) ? source : path.join(this.sourceRoot(), source);
+      var files = this.expandFiles('**', { dot: true, cwd: root });
+      files = _.difference(files, exclude);
+      destination = destination || source;
+      if (typeof destination === 'function') {
+        process = destination;
+        destination = source;
+      }
+      var cp = this.copy;
+
+      // get the path relative to the template root, and copy to the relative destination
+      for (var i in files) {
+        var dest = path.join(destination, files[i]);
+        cp.call(this, path.join(root, files[i]), dest, process);
+      }
+
     },
 
-
-    // projectfiles: function () {
-    //   // this.template('_package.json', 'package.json');
-    //   // this.template('editorconfig', '.editorconfig');
-    //   // this.template('jshintrc', '.jshintrc');
-    //   //this.template('_travis.yml', '.travis.yml');
-    //   //this.template('README.md');
-    // },
 
     // gitfiles: function () {
     //   //this.copy('gitattributes', '.gitattributes');
