@@ -1,0 +1,42 @@
+{
+  "name": "generator-hoodie-plugin",
+  "version": "0.1.0",
+  "description": "Yeoman generator for hoodie plugins",
+  "license": "MIT",
+  "main": "app/index.js",
+  "repository": "goappes/generator-hoodie-plugin",
+  "author": {
+    "name": "GoAppes",
+    "email": "dev@goappes.com",
+    "url": "https://github.com/goappes"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "files": [
+    "app"
+  ],
+  "keywords": [
+    "yeoman-generator"
+  ],
+  "dependencies": {
+    "chalk": "^0.5.1",
+    "github": "^0.2.1",
+    "lodash": "^2.4.1",
+    "npm-name": "^1.0.1",
+    "superb": "^1.0.0",
+    "underscore.string": "^2.4.0",
+    "which": "^1.0.7",
+    "yeoman-generator": "^0.18.1",
+    "yosay": "^1.0.0"
+  },
+  "devDependencies": {
+    "mocha": "*"
+  },
+  "peerDependencies": {
+    "yo": ">=1.0.0"
+  }
+}
