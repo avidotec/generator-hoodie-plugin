@@ -26,6 +26,11 @@ var extractGeneratorName = function (appname) {
 };
 
 module.exports = yeoman.generators.Base.extend({
+  constructor: function () {
+    yeoman.generators.Base.apply(this, arguments);
+    this.argument('appname', { type: String, required: false });
+  },
+
   initializing: function () {
     this.pkg = require('../package.json');
     this.currentYear = (new Date()).getFullYear();
@@ -40,7 +45,7 @@ module.exports = yeoman.generators.Base.extend({
     askForGeneratorName: function () {
       var done = this.async();
       var generatorName = extractGeneratorName(this.appname);
-
+      console.log(yosay('Hello, and welcome to hoodie-plugin generator!'));
       var prompts = [{
         name: 'generatorName',
         message: 'What\'s the base name of your hoodie plugin?',
@@ -71,7 +76,6 @@ module.exports = yeoman.generators.Base.extend({
         this.generatorName = props.generatorName;
         this.capitalizeName = _s.capitalize(this.generatorName);
         this.appname = 'hoodie-plugin-' + this.generatorName;
-
         done();
       }.bind(this));
     }
@@ -83,6 +87,9 @@ module.exports = yeoman.generators.Base.extend({
         this.destinationRoot(this.appname);
       }
       this.config.save();
+      this.config.set('appname', this.appname);
+      this.config.set('generatorName', this.generatorName);
+      this.config.set('capitalizeName', this.capitalizeName);
     }
   },
 
